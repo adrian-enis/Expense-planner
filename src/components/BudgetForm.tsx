@@ -17,7 +17,9 @@ const BudgetForm = () => {
     dispatch({type:"add-budget", payload:{budget}})
   }
   return (
-    <form className="space-y-5" onSubmit={handleSubmit}>
+    <form 
+      className="space-y-5" 
+      onSubmit={handleSubmit}>
       <div className="flex flex-col space-y-5">
         <label
           htmlFor="budget"
@@ -35,7 +37,9 @@ const BudgetForm = () => {
           onChange={handleChange}
         />
       </div>
-      <input type="submit" value="Define budget" 
+      <input 
+        type="submit" 
+        value="Define budget" 
         className="bg-blue-600 hover:bg-blue-700 cursor-pointer w-full 
          p-2 text-white font-bold disabled:opacity-5"
          disabled={isValided}

@@ -11,7 +11,7 @@ type BudgetProviderProps = {
     children: ReactNode
 }
 
-export const BudgetContext = createContext<BudgetContextProps>()
+export const BudgetContext = createContext<BudgetContextProps>(null!)
 
 export const BudgetProvider = ({children}: BudgetProviderProps) => {
     
