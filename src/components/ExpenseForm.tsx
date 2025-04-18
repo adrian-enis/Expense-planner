@@ -1,4 +1,4 @@
-import React, { Children } from 'react'
+import React, { Children, use, useEffect } from 'react'
 import { useState, ChangeEvent } from 'react';
 import { DrafExpensive, Value } from '../types';
 import { categories } from '../data/categories'
@@ -17,11 +17,23 @@ const ExpenseForm = () => {
     date:new Date()
   })
   const [error, setError] = useState("");
-  const {dispatch} = useBudget()  
+
+  const {dispatch, state} = useBudget();
+  useEffect(() => {
+    if(state.editingId){
+      const editingExpense = state.expenses.filter(currentExpense => currentExpense.id === state.editingId)[0];
+      setExpense(editingExpense) 
+    }
+  }, [state.editingId])  
+
   const handleChange= (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement> ) => {
+
     const {name, value} = e.target
+
     const isAmountField = ["amount"].includes(name)
+
     setExpense({...expense, [name] : isAmountField ? +value : value})
+
   }
   const handleChangeDate = (value : Value) => {
     setExpense({...expense, date:value})
@@ -35,7 +47,13 @@ const ExpenseForm = () => {
       
       return setError("all fields are required")
     }
-    dispatch({type: "add-expenses", payload:{expense}})
+    //Add expense or editing expense
+    if(state.editingId){
+      dispatch({type:"update-expense", payload:{expense:{id:state.editingId, ...expense}}})
+    }else{
+
+      dispatch({type: "add-expenses", payload:{expense}})
+    }
 
     //Reset form
     setExpense({
@@ -48,7 +66,11 @@ const ExpenseForm = () => {
   return (
     <form className='space-y-5' onSubmit={handleSubmit}>
         <legend 
-          className=' uppercase text-center text-2xl font-black border-b-4 border-blue-500 py-2'>New Budget</legend>
+          className=' uppercase text-center text-2xl font-black border-b-4 border-blue-500 py-2'>
+            {
+              state.editingId ? "Save changes" : "New budget"
+            }
+          </legend>
 
         {error && <ErrorMessage>{error}</ErrorMessage>}
 
@@ -112,7 +134,7 @@ const ExpenseForm = () => {
             <input 
               type="submit" 
               className='bg-blue-600 w-full p-2 rounded-lg uppercase font-bold text-white cursor-pointer hover:bg-blue-700' 
-              value={"Record your spending"} />
+              value={state.editingId ? "Save changes" : "Record expense"} />
         </div>
     </form>
   )
