@@ -1,4 +1,4 @@
-import React, { Children, use, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useState, ChangeEvent } from 'react';
 import { DrafExpensive, Value } from '../types';
 import { categories } from '../data/categories'
@@ -6,35 +6,41 @@ import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import ErrorMessage from './ErrorMessage';
-import { useBudget } from '../hooks/useBudget';
+import { useBudget} from '../hooks/useBudget';
 
 
 const ExpenseForm = () => {
+  //Estate de gastos
   const [expense, setExpense] = useState<DrafExpensive>({
     expenseName:"",
     amount:0,
     category:"",
     date:new Date()
   })
+  //State para los error
   const [error, setError] = useState("");
-
-  const {dispatch, state} = useBudget();
+  const [previousAmount, setPreviousAmount] = useState(0)
+  const {dispatch, state, remainingBudget} = useBudget();
+  //Effec para saber cuando ocurren cambios en edit
   useEffect(() => {
     if(state.editingId){
       const editingExpense = state.expenses.filter(currentExpense => currentExpense.id === state.editingId)[0];
       setExpense(editingExpense) 
+      setPreviousAmount(editingExpense.amount)
     }
   }, [state.editingId])  
 
+  //Manejar los cambios de los los formularios
   const handleChange= (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement> ) => {
 
+    //Verificacion de campos de entrada (number or string)
     const {name, value} = e.target
-
     const isAmountField = ["amount"].includes(name)
-
     setExpense({...expense, [name] : isAmountField ? +value : value})
 
   }
+
+  //Manejar los cambios del calendario
   const handleChangeDate = (value : Value) => {
     setExpense({...expense, date:value})
   }
@@ -43,10 +49,13 @@ const ExpenseForm = () => {
 
     //validate
     if(Object.values(expense).includes("")){
-
-      
       return setError("all fields are required")
     }
+    //Validar si se pasa del presupuesto (Evitamos Sobregiros presupuestarios)
+    if((expense.amount - previousAmount) > remainingBudget){
+      return setError("There is no budged")
+    }
+
     //Add expense or editing expense
     if(state.editingId){
       dispatch({type:"update-expense", payload:{expense:{id:state.editingId, ...expense}}})
