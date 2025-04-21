@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid"
 import { DrafExpensive, Expense } from "../types"
+import { act } from "react";
 
 
 export type BudgetActions = 
@@ -9,7 +10,9 @@ export type BudgetActions =
 { type: "add-expenses", payload:{expense:DrafExpensive}} |
 { type: "remove-expense", payload:{id:Expense["id"]}}   |
 { type: "get-expense-by-id", payload:{id:Expense["id"]}} |
-{ type: "update-expense", payload:{expense: Expense}}   
+{ type: "update-expense", payload:{expense: Expense}}   |
+{ type: "reset-app"}
+
 
 const initialBudget = () : number => {
     const localStorageBudget = localStorage.getItem("budget");
@@ -98,6 +101,16 @@ export const budgetReducer = (
                 modal:false
         }
     }
+
+    if(action.type === "reset-app"){
+        return {
+            ...state,
+            budget:0,
+            expenses:[],
+        
+        }
+    }
+ 
 
     return state    
 }
