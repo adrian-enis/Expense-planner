@@ -16,7 +16,7 @@ function App() {
   
   const isValidBudget = useMemo(() => state.budget > 0, [state.budget])
   useEffect(() => {
-    localStorage.setItem("budged", state.budget.toString())
+    localStorage.setItem("budget", state.budget.toString())
     localStorage.setItem("expenses", JSON.stringify(state.expenses))
   }, [state])
 
@@ -30,7 +30,7 @@ function App() {
         {isValidBudget ? <BudgetTracker/> : <BudgetForm/>}
       </div>
       {isValidBudget && (
-        <main className="max-w-3xl mx-auto py-10">
+        <main className="max-w-3xl mx-auto py-10 bg-amber-300">
           <FilterByCategory/>
           <ExpenseList/>
           <ExpenseModal/>

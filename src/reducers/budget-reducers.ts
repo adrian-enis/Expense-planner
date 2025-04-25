@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid"
 import { Category, DrafExpensive, Expense } from "../types"
-import { act } from "react";
+
 
 
 export type BudgetActions = 
@@ -19,10 +19,11 @@ const initialBudget = () : number => {
     const localStorageBudget = localStorage.getItem("budget");
     return localStorageBudget ? +localStorageBudget : 0
 }
-const initalExpenses = () : Expense[] => {
+const initialExpenses = () : Expense[] => {
     const localStorageExpense = localStorage.getItem("expenses");
     return localStorageExpense ? JSON.parse(localStorageExpense): [];
 }
+
 
 export type BudgetState = {                          
     budget: number  
@@ -34,7 +35,7 @@ export type BudgetState = {
 export const initialState : BudgetState = {
     budget:initialBudget(),
     modal:false,
-    expenses:initalExpenses(),
+    expenses:initialExpenses(),
     editingId:"",
     currentCategory:""
 }
@@ -114,7 +115,8 @@ export const budgetReducer = (
         }
     }
 
-    if(action.type === "add-filter-category"){
+    if(action.type === "add-filter-category"){  
+        
         return{
             ...state,
             currentCategory:action.payload.id

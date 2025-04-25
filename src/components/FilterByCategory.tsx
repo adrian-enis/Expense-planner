@@ -7,6 +7,7 @@ const FilterByCategory = () => {
 
     const handleChange = (e: ChangeEvent<HTMLSelectElement>) => (
         dispatch({type:"add-filter-category", payload:{id: e.target.value}})
+    
     )
 
   return (
