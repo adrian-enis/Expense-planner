@@ -6,7 +6,21 @@ import { ExpenseDetails } from './ExpenseDetails';
 export default function ExpenseList() {
 
   const {state} = useBudget();
+  /**
+ * Filtra los gastos según la categoría seleccionada.
+ * Si hay una categoría activa, se muestran solo los gastos de esa categoría;
+ * de lo contrario, se muestran todos los gastos.
+ * @type {Array}
+ */
+
   const filteredExpenses = state.currentCategory ? state.expenses.filter(expense => expense.category === state.currentCategory) : state.expenses
+
+  
+/**
+ * Determina si la lista de gastos filtrados está vacía.
+ * @type {boolean}
+ */
+
   const isEmpty = useMemo(() => filteredExpenses.length === 0, [filteredExpenses])
 
   return (

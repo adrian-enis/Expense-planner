@@ -5,12 +5,36 @@ import AmountDisplay from "./AmountDisplay";
 import { useBudget } from "../hooks/useBudget";
 
 const BudgetTracker = () => {
+  /**
+ * Extrae valores del contexto de presupuesto.
+ * @type {{ state: Object, totalExpense: number, remainingBudget: number, dispatch: Function }}
+ */
+
   const {state, totalExpense, remainingBudget, dispatch } = useBudget();
+
+  /**
+ * Calcula el porcentaje de gasto basado en el presupuesto total.
+ * @type {number}
+ */
+
   const percentage = +((totalExpense / state.budget) * 100).toFixed(2)
+
+  /**
+ * Componente de barra de progreso circular que muestra el porcentaje de presupuesto utilizado.
+ * @component
+ * @param {Object} props - Propiedades del componente.
+ * @param {number} props.value - Valor del progreso basado en el porcentaje del presupuesto.
+ * @param {string} props.text - Texto que se muestra dentro de la barra de progreso.
+ * @param {Object} props.styles - Estilos personalizados de la barra de progreso.
+ * @param {string} props.styles.pathColor - Color del indicador de progreso.
+ * @param {string} props.styles.trailColor - Color del fondo de la barra.
+ * @param {number} props.styles.textSize - Tamaño del texto dentro de la barra.
+ */
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
       <div className="flex justify-center">
+        
       <CircularProgressbar 
       value={percentage} 
       text={`${percentage}%Budget`}
